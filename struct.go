@@ -33,7 +33,7 @@ func (s *Struct) GetFieldAndType() map[string]string {
 		name := s.Meta.Field(i).Name
 		tName := s.Value.FieldByName(name).Type().Name()
 		if tName == "" {
-			tName = "map[string]interface{}"
+			tName = "map[string]interface {}"
 		}
 		dict[name] = tName
 	}

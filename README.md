@@ -3,8 +3,8 @@
 praks is a library for dynamically generating golang structure code from json and csv text data.
 
 Supported text style:
-    - json
-    - csv <= will
+- json
+- csv <= will
 
 ## Installation
 

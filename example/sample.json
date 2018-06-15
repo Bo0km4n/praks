@@ -1,1 +1,1 @@
-{"charset":"utf-8","client_id":"dfd0ba49-d8ad-4c53-86e5-b05018ae5b90", "nested": {"col0": 1, "col1": "hello"}}
+{"charset":"utf-8","client_id":"dfd0ba49-d8ad-4c53-86e5-b05018ae5b90", "nested": {"col0": 1, "col1": "hello"}, "nest_nest":{"col1":{"col2":0}, "col3":{"col4":"str"}}}
