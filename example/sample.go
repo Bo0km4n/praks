@@ -22,7 +22,8 @@ func main() {
 	scanner.Scan()
 
 	s := p.TexToStruct(scanner.Text())
-	pp.Println(s.GetValue("CHARSET"), s.GetValue("CLIENT_ID"), s.GetValue("NESTED"))
+	pp.Println(s.GetValue("CHARSET"))
 	pp.Println(s.GetValue("NEST_NEST"))
+	pp.Println(s.GetValue("time"))
 	pp.Println(s.GetFieldAndType())
 }

@@ -7,8 +7,10 @@ import (
 
 // Struct is wrap struct
 type Struct struct {
-	Meta  reflect.Type
-	Value reflect.Value
+	Meta       reflect.Type
+	Value      reflect.Value
+	timeFormat string
+	parser     Parser
 }
 
 // GetFieldNames //
@@ -43,35 +45,18 @@ func (s *Struct) GetFieldAndType() map[string]string {
 
 // SetValue //
 func (s *Struct) SetValue(f string, v interface{}) {
-	s.Value.FieldByName(f).Set(reflect.ValueOf(v))
+	cv := getCastedValue(s.parser, reflect.ValueOf(v))
+	s.Value.FieldByName(f).Set(reflect.ValueOf(cv))
 }
 
 // GetValue //
 func (s *Struct) GetValue(f string) interface{} {
 	f = strings.ToUpper(f)
 	v := s.Value.FieldByName(f)
-	return getCastedValue(v)
+	return getCastedValue(s.parser, v)
 }
 
-func getCastedValue(v reflect.Value) interface{} {
-	typeName := v.Type().Name()
-
-	switch typeName {
-	case "string":
-		return v.Interface().(string)
-	case "int":
-		return v.Interface().(int)
-	case "int32":
-		return v.Interface().(int32)
-	case "int64":
-		return v.Interface().(int64)
-	case "float32":
-		return v.Interface().(float32)
-	case "float64":
-		return v.Interface().(float64)
-	case "bool":
-		return v.Interface().(bool)
-	default:
-		return v.Interface()
-	}
+// SetTimeFormat //
+func (s *Struct) SetTimeFormat(f string) {
+	s.timeFormat = f
 }

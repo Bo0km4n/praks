@@ -20,12 +20,9 @@ func (j *jsonParser) TexToStruct(text string) *Struct {
 	rt := j.buildReflectType(item)
 	s.Meta = rt
 	s.Value = reflect.New(rt).Elem()
+	s.parser = j
 	j.setDefaultValue(&s, item)
 	return &s
-}
-
-func (j *jsonParser) SetTimeFormat(format string) {
-	j.timeFormat = format
 }
 
 func (j *jsonParser) parseText(body []byte) (interface{}, error) {
@@ -46,12 +43,19 @@ func (j *jsonParser) buildReflectType(item interface{}) reflect.Type {
 	dict := item.(map[string]interface{})
 	fields := make([]reflect.StructField, 0)
 	for i, v := range dict {
-		fmt.Println(reflect.TypeOf(v))
-		f := reflect.StructField{Name: strings.ToUpper(i), Type: reflect.TypeOf(v)}
+		f := reflect.StructField{Name: strings.ToUpper(i), Type: reflect.TypeOf(getCastedValue(j, reflect.ValueOf(v)))}
 		jsonTag := fmt.Sprintf("json:\"%s\"", i)
 		tag := reflect.ValueOf(&f.Tag).Elem()
 		tag.SetString(jsonTag)
 		fields = append(fields, f)
 	}
 	return reflect.StructOf(fields)
+}
+
+func (j *jsonParser) GetTimeFormat() string {
+	return j.timeFormat
+}
+
+func (j *jsonParser) SetTimeFormat(f string) {
+	j.timeFormat = f
 }
