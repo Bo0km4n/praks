@@ -2,6 +2,7 @@ package praks
 
 import (
 	"reflect"
+	"strings"
 )
 
 // Struct is wrap struct
@@ -47,6 +48,7 @@ func (s *Struct) SetValue(f string, v interface{}) {
 
 // GetValue //
 func (s *Struct) GetValue(f string) interface{} {
+	f = strings.ToUpper(f)
 	v := s.Value.FieldByName(f)
 	return getCastedValue(v)
 }
