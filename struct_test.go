@@ -18,7 +18,7 @@ func TestGetFieldNames(t *testing.T) {
 		{
 			Parser:   "json",
 			FilePath: "example/sample.json",
-			Expect:   2,
+			Expect:   5,
 		},
 	}
 
