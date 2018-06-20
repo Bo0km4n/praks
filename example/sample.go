@@ -11,7 +11,11 @@ import (
 )
 
 func main() {
-	p := praks.NewParser("json")
+	p, err := praks.NewParser("json")
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	fileName := "sample.json"
 	fp, err := os.Open(fileName)
@@ -26,4 +30,5 @@ func main() {
 	pp.Println(s.GetValue("NEST_NEST"))
 	pp.Println(s.GetValue("time"))
 	pp.Println(s.GetFieldAndType())
+	pp.Println(s.Value.Interface())
 }

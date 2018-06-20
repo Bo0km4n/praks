@@ -20,15 +20,36 @@ $ go get github.com/Bo0km4n/praks
 package main
 
 import (
-    "fmt"
+	"bufio"
+	"log"
+	"os"
+
+	"github.com/k0kubun/pp"
+
 	"github.com/Bo0km4n/praks"
 )
 
 func main() {
-    jsonBody := `{"charset":"utf-8","client_id":"dfd0ba49-d8ad-4c53-86e5-b05018ae5b90", "nested": {"col0": 1, "col1": "hello"}, "time":"2016-07-08T12:00:00"}`
+	p, err := praks.NewParser("json")
 
-	p := praks.NewParser("json")
-	s := p.TexToStruct(jsonBody)
-	fmt.Println(s.GetValue("charset"), s.GetValue("client_id"), s.GetValue("nested"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fileName := "sample.json"
+	fp, err := os.Open(fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	scanner := bufio.NewScanner(fp)
+	scanner.Scan()
+
+	s := p.TexToStruct(scanner.Text())
+	pp.Println(s.GetValue("CHARSET"))
+	pp.Println(s.GetValue("NEST_NEST"))
+	pp.Println(s.GetValue("time"))
+	pp.Println(s.GetFieldAndType())
+	pp.Println(s.Value.Interface())
 }
+
 ```

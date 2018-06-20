@@ -1,6 +1,7 @@
 package praks
 
 import (
+	"errors"
 	"reflect"
 	"time"
 )
@@ -14,14 +15,14 @@ type Parser interface {
 var defaultTimeFormat = "2006-01-02T15:04:05"
 
 // NewParser get json or csv parser
-func NewParser(t string) Parser {
+func NewParser(t string) (Parser, error) {
 	switch t {
 	case "json":
-		return &jsonParser{}
+		return &jsonParser{}, nil
 	// TODO
 	// Add csv case
 	default:
-		return &jsonParser{}
+		return nil, errors.New("not found parser")
 	}
 }
 
