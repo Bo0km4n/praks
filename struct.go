@@ -7,10 +7,9 @@ import (
 
 // Struct is wrap struct
 type Struct struct {
-	Meta       reflect.Type
-	Value      reflect.Value
-	timeFormat string
-	parser     Parser
+	Meta   reflect.Type
+	Value  reflect.Value
+	parser Parser
 }
 
 // GetFieldNames //
@@ -54,9 +53,4 @@ func (s *Struct) GetValue(f string) interface{} {
 	f = strings.ToUpper(f)
 	v := s.Value.FieldByName(f)
 	return getCastedValue(s.parser, v)
-}
-
-// SetTimeFormat //
-func (s *Struct) SetTimeFormat(f string) {
-	s.timeFormat = f
 }
