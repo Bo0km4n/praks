@@ -23,7 +23,10 @@ func TestGetFieldNames(t *testing.T) {
 	}
 
 	for _, c := range tc {
-		p := NewParser(c.Parser)
+		p, err := NewParser(c.Parser)
+		if err != nil {
+			t.Fatal(err)
+		}
 		fp, err := os.Open(c.FilePath)
 		if err != nil {
 			t.Fatal(err)
@@ -51,7 +54,10 @@ func TestGetValueTypeToStringJSON(t *testing.T) {
 	}
 
 	for _, c := range tc {
-		p := NewParser(c.Parser)
+		p, err := NewParser(c.Parser)
+		if err != nil {
+			t.Fatal(err)
+		}
 		fp, err := os.Open(c.FilePath)
 		if err != nil {
 			t.Fatal(err)
@@ -78,7 +84,10 @@ func TestGetFieldAndType(t *testing.T) {
 	}
 
 	for _, c := range tc {
-		p := NewParser(c.Parser)
+		p, err := NewParser(c.Parser)
+		if err != nil {
+			t.Fatal(err)
+		}
 		fp, err := os.Open(c.FilePath)
 		if err != nil {
 			t.Fatal(err)

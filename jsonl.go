@@ -9,6 +9,14 @@ import (
 
 type jsonParser struct {
 	timeFormat string
+	tagFormat  string
+}
+
+func newJSONParser(timeF, tagF string) *jsonParser {
+	return &jsonParser{
+		timeFormat: timeF,
+		tagFormat:  tagF,
+	}
 }
 
 func (j *jsonParser) TexToStruct(text string) *Struct {
@@ -44,7 +52,7 @@ func (j *jsonParser) buildReflectType(item interface{}) reflect.Type {
 	fields := make([]reflect.StructField, 0)
 	for i, v := range dict {
 		f := reflect.StructField{Name: strings.ToUpper(i), Type: reflect.TypeOf(getCastedValue(j, reflect.ValueOf(v)))}
-		jsonTag := fmt.Sprintf("json:\"%s\"", i)
+		jsonTag := fmt.Sprintf("%s:\"%s\"", j.tagFormat, i)
 		tag := reflect.ValueOf(&f.Tag).Elem()
 		tag.SetString(jsonTag)
 		fields = append(fields, f)
@@ -58,4 +66,8 @@ func (j *jsonParser) GetTimeFormat() string {
 
 func (j *jsonParser) SetTimeFormat(f string) {
 	j.timeFormat = f
+}
+
+func (j *jsonParser) SetTagFormat(f string) {
+	j.tagFormat = f
 }

@@ -10,15 +10,17 @@ import (
 type Parser interface {
 	TexToStruct(text string) *Struct
 	GetTimeFormat() string
+	SetTagFormat(string)
 }
 
 var defaultTimeFormat = "2006-01-02T15:04:05"
+var defaultTagFormat = "json"
 
 // NewParser get json or csv parser
 func NewParser(t string) (Parser, error) {
 	switch t {
 	case "json":
-		return &jsonParser{}, nil
+		return newJSONParser(defaultTimeFormat, defaultTagFormat), nil
 	// TODO
 	// Add csv case
 	default:
@@ -50,12 +52,7 @@ func getCastedValue(p Parser, v reflect.Value) interface{} {
 }
 
 func castString(p Parser, v string) interface{} {
-	timeFormat := p.GetTimeFormat()
-	if timeFormat == "" {
-		timeFormat = defaultTimeFormat
-	}
-
-	t, err := time.Parse(timeFormat, v)
+	t, err := time.Parse(p.GetTimeFormat(), v)
 	if err != nil {
 		return v
 	}
