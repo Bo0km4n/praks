@@ -30,7 +30,6 @@ func NewParser(t string) (Parser, error) {
 
 func getCastedValue(p Parser, v reflect.Value) interface{} {
 	typeKind := v.Kind()
-
 	switch typeKind {
 	case reflect.String:
 		return castString(p, v.Interface().(string))
@@ -46,6 +45,8 @@ func getCastedValue(p Parser, v reflect.Value) interface{} {
 		return v.Interface().(float64)
 	case reflect.Bool:
 		return v.Interface().(bool)
+	case reflect.Slice, reflect.Array:
+		return v.Interface().([]interface{})
 	default:
 		return v.Interface()
 	}

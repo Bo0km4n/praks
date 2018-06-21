@@ -27,22 +27,25 @@ func (p *Printer) Print() {
 		reflect.String:
 		p.buffer.WriteString(fmt.Sprintf("%v", p.value.Kind()))
 	case reflect.Map:
-		p.printMap(p.value)
+		p.printMap()
 	case reflect.Struct:
 		p.printStruct()
+	case reflect.Slice, reflect.Array:
+		p.printSlice()
 	default:
 		p.printInterface(p.value)
 	}
 }
 
-func (p *Printer) printMap(v reflect.Value) {
+func (p *Printer) printMap() {
+	m := p.value
 	p.buffer.WriteString("map{ ")
-	keys := v.MapKeys()
-	for i := 0; i < v.Len(); i++ {
-		value := v.MapIndex(keys[i])
-		p.value = value
+	keys := m.MapKeys()
+	for i := 0; i < m.Len(); i++ {
+		v := m.MapIndex(keys[i])
+		p.value = v
 		p.Print()
-		if i != v.Len()-1 && v.Len() > 1 {
+		if i != m.Len()-1 && m.Len() > 1 {
 			p.buffer.WriteString(", ")
 		}
 	}
@@ -85,6 +88,25 @@ func (p *Printer) printTime() {
 		fmt.Sprintf("%02d", tm.Second()),
 	)
 	p.buffer.WriteString(t)
+}
+
+func (p *Printer) printSlice() {
+	if p.value.Len() == 0 {
+		st := fmt.Sprintf("%s[]", p.value.Type().String())
+		p.buffer.WriteString(st)
+		return
+	}
+
+	p.buffer.WriteString("array[ ")
+	for i := 0; i < p.value.Len(); i++ {
+		pp := NewPrinter(p.value.Index(i))
+		pp.Print()
+		p.buffer.WriteString(pp.Flush())
+		if i != p.value.Len()-1 && p.value.Len() > 1 {
+			p.buffer.WriteString(", ")
+		}
+	}
+	p.buffer.WriteString(" ]")
 }
 
 func (p *Printer) Flush() string {
