@@ -76,14 +76,13 @@ func (p *Printer) printTime() {
 	}
 	tm := p.value.Interface().(time.Time)
 	t := fmt.Sprintf(
-		"%s-%s-%sT%s:%s:%s %s",
+		"%s-%s-%sT%s:%s:%s",
 		strconv.Itoa(tm.Year()),
 		fmt.Sprintf("%02d", tm.Month()),
 		fmt.Sprintf("%02d", tm.Day()),
 		fmt.Sprintf("%02d", tm.Hour()),
 		fmt.Sprintf("%02d", tm.Minute()),
 		fmt.Sprintf("%02d", tm.Second()),
-		tm.Location().String(),
 	)
 	p.buffer.WriteString(t)
 }
