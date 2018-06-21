@@ -3,6 +3,8 @@ package praks
 import (
 	"reflect"
 	"strings"
+
+	"github.com/Bo0km4n/praks/internal"
 )
 
 // Struct is wrap struct
@@ -33,11 +35,9 @@ func (s *Struct) GetFieldAndType() map[string]string {
 
 	for i := 0; i < s.Meta.NumField(); i++ {
 		name := s.Meta.Field(i).Name
-		tName := s.Value.FieldByName(name).Type().Name()
-		if tName == "" {
-			tName = "map[string]interface {}"
-		}
-		dict[name] = tName
+		p := internal.NewPrinter(s.Value.FieldByName(name))
+		p.Print()
+		dict[name] = p.Flush()
 	}
 	return dict
 }

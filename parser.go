@@ -29,22 +29,22 @@ func NewParser(t string) (Parser, error) {
 }
 
 func getCastedValue(p Parser, v reflect.Value) interface{} {
-	typeName := v.Type().Name()
+	typeKind := v.Kind()
 
-	switch typeName {
-	case "string":
+	switch typeKind {
+	case reflect.String:
 		return castString(p, v.Interface().(string))
-	case "int":
+	case reflect.Int:
 		return v.Interface().(int)
-	case "int32":
+	case reflect.Int32:
 		return v.Interface().(int32)
-	case "int64":
+	case reflect.Int64:
 		return v.Interface().(int64)
-	case "float32":
+	case reflect.Float32:
 		return v.Interface().(float32)
-	case "float64":
+	case reflect.Float64:
 		return v.Interface().(float64)
-	case "bool":
+	case reflect.Bool:
 		return v.Interface().(bool)
 	default:
 		return v.Interface()
