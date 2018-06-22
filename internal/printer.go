@@ -38,18 +38,34 @@ func (p *Printer) Print() {
 }
 
 func (p *Printer) printMap() {
-	m := p.value
-	p.buffer.WriteString("map{ ")
-	keys := m.MapKeys()
-	for i := 0; i < m.Len(); i++ {
-		v := m.MapIndex(keys[i])
-		p.value = v
-		p.Print()
-		if i != m.Len()-1 && m.Len() > 1 {
-			p.buffer.WriteString(", ")
-		}
+	if p.value.Len() == 0 {
+		p.printf("%s{}", p.typeString())
+		return
 	}
-	p.buffer.WriteString(" }")
+
+	keys := p.value.MapKeys()
+	keyType := keys[0].Type().String()
+	valueType := p.value.MapIndex(keys[0]).Elem().Type().String()
+	isMixed := false
+	// check value types
+	for i := 0; i < p.value.Len(); i++ {
+		isMixed = (p.value.MapIndex(keys[i]).Elem().Type().String() != valueType)
+	}
+
+	if isMixed {
+		valueType = "interface {}"
+	}
+	fmt.Println("ssssss", isMixed)
+	p.printf("map < %s : %s >", keyType, valueType)
+
+	// for i := 0; i < p.value.Len(); i++ {
+	// 	value := p.value.MapIndex(keys[i])
+	// 	p.printf("%s:\t%s", p.format(keys[i]), p.format(value))
+
+	// 	if i < p.value.Len()-1 {
+	// 		p.print(", ")
+	// 	}
+	// }
 }
 
 func (p *Printer) printInterface(v reflect.Value) {
@@ -97,20 +113,42 @@ func (p *Printer) printSlice() {
 		return
 	}
 
-	p.buffer.WriteString("array[ ")
-	for i := 0; i < p.value.Len(); i++ {
-		pp := NewPrinter(p.value.Index(i))
-		pp.Print()
-		p.buffer.WriteString(pp.Flush())
-		if i != p.value.Len()-1 && p.value.Len() > 1 {
-			p.buffer.WriteString(", ")
-		}
-	}
-	p.buffer.WriteString(" ]")
+	v := p.value.Index(0)
+	vp := NewPrinter(v)
+	vp.Print()
+	arrayType := fmt.Sprintf("array < %s >", vp.Flush())
+	p.buffer.WriteString(arrayType)
+	// for i := 0; i < p.value.Len(); i++ {
+	// 	pp := NewPrinter(p.value.Index(i))
+	// 	pp.Print()
+	// 	p.buffer.WriteString(pp.Flush())
+	// 	if i != p.value.Len()-1 && p.value.Len() > 1 {
+	// 		p.buffer.WriteString(", ")
+	// 	}
+	// }
 }
 
 func (p *Printer) Flush() string {
 	s := p.buffer.String()
 	p.buffer = bytes.NewBufferString("")
 	return s
+}
+
+func (p *Printer) format(object reflect.Value) string {
+	pp := NewPrinter(object)
+	pp.Print()
+	return pp.Flush()
+}
+
+func (p *Printer) typeString() string {
+	return p.value.Type().String()
+}
+
+func (p *Printer) printf(format string, args ...interface{}) {
+	text := fmt.Sprintf(format, args...)
+	p.print(text)
+}
+
+func (p *Printer) print(text string) {
+	fmt.Fprint(p.buffer, text)
 }

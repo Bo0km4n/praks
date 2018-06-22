@@ -27,6 +27,10 @@ func main() {
 		"array": [
 			{"obj1": "hello"},
 			{"obj2": "pokemon"}
+		],
+		"array_complex": [
+			"hello",
+			"hello" 
 		]
 	}`
 	p, err := praks.NewParser("json")
